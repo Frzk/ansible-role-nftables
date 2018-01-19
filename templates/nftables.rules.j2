@@ -1,0 +1,28 @@
+#jinja2: lstrip_blocks: True
+#!/usr/sbin/nft -f
+{{ ansible_managed | comment }}
+
+{% if nft_flush_ruleset %}
+flush ruleset
+{% endif %}
+
+{% for table in nft_tables %}
+table {{ table.family }} {{ table.name }} {
+
+{%- if table.sets is defined %}
+{% include "templates/sets.j2" %}
+{% endif %}
+
+{%- if table.maps is defined %}
+{% include "templates/maps.j2" %}
+{% endif %}
+
+{%- if table.verdict_maps is defined %}
+{% include "templates/verdict_maps.j2" %}
+{% endif %}
+
+{%- if table.chains is defined %}
+{% include "templates/chains.j2" %}
+{% endif %}
+}
+{% endfor %}

@@ -1,0 +1,22 @@
+---
+nft_flush_ruleset: yes
+nft_config_file: "/etc/nftables.conf"
+
+nft_tables:
+  - name:  firewall
+    family: inet
+    chains:
+      - name: input
+        base:
+          type: "filter"
+          hook: "input"
+          priority: 0
+          policy: "accept"
+
+      - name: output
+        base:
+          type: "filter"
+          hook: "output"
+          priority: 0
+          policy: "accept"
+...

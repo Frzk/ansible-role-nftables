@@ -1,0 +1,12 @@
+{# Please leave formatting as it is. #}
+{% for vmap in table.verdict_maps %}
+
+    map {{ vmap.name }} {
+        type {{ vmap.keys_type }}: verdict
+        {% if vmap.elements is defined %}
+        {% for elem in vmap.elements %}
+        {{ elem.key }}: {{ elem.verdict }}
+        {% endfor %}
+        {% endif %}
+    }
+{% endfor %}

@@ -1,0 +1,12 @@
+{# Please leave formatting as it is. #}
+{% for map in table.maps %}
+
+    map {{ map.name }} {
+        type {{ map.keys_type }}: {{ map.values_type }}
+        {% if map.elements is defined %}
+        {% for elem in map.elements %}
+        {{ elem.key }}: {{ elem.value }}
+        {% endfor %}
+        {% endif %}
+    }
+{% endfor %}

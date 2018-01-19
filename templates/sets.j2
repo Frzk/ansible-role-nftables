@@ -1,0 +1,30 @@
+{# Please leave formatting as it is. #}
+{% for set in table.sets %}
+
+    set {{ set.name }} {
+        type {{ set.type }}
+        {% if set.timeout is defined %}
+        timeout {{ set.timeout }}
+        {% endif %}
+
+        {%- if set.gc_interval is defined %}
+        gc-interval {{ set.gc_interval }}
+        {% endif %}
+
+        {%- if set.size is defined %}
+        size {{ set.size }}
+        {% endif %}
+
+        {%- if set.policy is defined %}
+        policy {{ set.policy }}
+        {% endif %}
+
+        {%- if set.flags is defined %}
+        flags {{ set.flags | join(', ') }}
+        {% endif %}
+
+        {%- if set.elements is defined %}
+        elements = { {{ set.elements | join(', ') }} }
+        {% endif %}
+    }
+{% endfor %}

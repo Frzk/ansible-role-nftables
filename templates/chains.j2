@@ -1,0 +1,20 @@
+{# Please leave formatting as it is. #}
+{% for chain in table.chains %}
+
+    chain {{ chain.name }} {
+        {% if chain.base is defined %}
+        type {{ chain.base.type }} hook {{ chain.base.hook }} priority {{ chain.base.priority }};
+            {%- if chain.base.policy is defined %} policy {{ chain.base.policy }};{% endif %}
+        {% endif %}
+
+        {% if chain.rules is defined -%}
+        {% for rule in chain.rules|sort(attribute="position") %}
+
+        {% if rule.comment is defined %}
+        # {{ rule.comment }}
+        {% endif %}
+        {{ rule.statement }}
+        {% endfor %}
+        {% endif %}
+    }
+{% endfor %}
