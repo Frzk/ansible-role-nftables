@@ -1,5 +1,7 @@
 # Ansible Role: `nftables`
 
+[![Build Status](https://travis-ci.org/Frzk/ansible-role-nftables.svg?branch=master)](https://travis-ci.org/Frzk/ansible-role-nftables)
+
 This Ansible role allows you to install `nftables` and manage its configuration.
 
 For more information about `nftables`, please check [the official project page](http://netfilter.org/projects/nftables/index.html).
