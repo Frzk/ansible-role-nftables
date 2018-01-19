@@ -9,59 +9,28 @@ For more information about `nftables`, please check [the official project page](
 
 Variables and *properties* in bold are mandatory. Others are optional.
 
-
-| Variable name            | Description                                                   | Default value      |
-| ------------------------ | ------------------------------------------------------------- | ------------------ |
-| `nftables_flush_ruleset` | Wether we should flush the current ruleset or not.            | yes                |
-| `nftables_config_file`   | Path to the configuration file.                               | /etc/nftables.conf |
-| `nftables_tables`        | A list of `table` *objects* representing the nftables tables. |                    |
-
-Example:
-
-```yaml
----
-nftables_flush_ruleset: yes
-nftables_config_file: /etc/firewall.rules
-nftables_tables:
-- name: firewall
-  family: inet
-- name: nat
-  family: inet
-...
-```
+| Variable name            | Description                                        | Default value        |
+| ------------------------ | -------------------------------------------------- | -------------------- |
+| `nftables_flush_ruleset` | Wether we should flush the current ruleset or not. | `yes`                |
+| `nftables_config_file`   | Path to the configuration file.                    | `/etc/nftables.conf` |
+| `nftables_tables`        | A list of [table](#table-properties).              |                      |
 
 
-### `table` properties
-
-[DOC](https://manpages.debian.org/testing/nftables/nftables.8.en.html#TABLES)
+### table properties
 
 | Property name  | Description                                                                                                 | Default value |
 | -------------- | ----------------------------------------------------------------------------------------------------------- | ------------- |
 | **`name`**     | Name of the table.                                                                                          |               |
 | `family`       | Address family of the table. If specified, must be either `ip`, `ip6`, `inet`, `arp`, `bridge` or `netdev`. | `ip`          |
-| `sets`         | A list of `set` *objects*.                                                                                  |               |
-| `maps`         | A list of `map` *objects*.                                                                                  |               |
-| `verdict_maps` | A list of `verdict_map` *objects*.                                                                          |               |
-| `chains`       | A list of `chain` *objects*.                                                                                |               |
+| `sets`         | A list of [set](#set-properties).                                                                           |               |
+| `maps`         | A list of [map](#map-properties).                                                                           |               |
+| `verdict_maps` | A list of [verdict_map](#verdict_map-properties).                                                           |               |
+| `chains`       | A list of [chain](#chain-properties).                                                                       |               |
 
-**Example:**
-
-```yaml
----
-nftables_tables:
-- name: firewall_ipv4
-  family: ip
-  sets:
-    [...]
-  chains:
-    [...]
-...
-```
+[Documentation](https://manpages.debian.org/testing/nftables/nftables.8.en.html#TABLES)
 
 
-### `set` properties
-
-[DOC](https://manpages.debian.org/nftables/nftables.8.en.html#SETS)
+### set properties
 
 | Property name   | Description                                                                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -74,67 +43,29 @@ nftables_tables:
 | `gc_interval`   | Garbage collection interval.                                                                                                                      |
 | `elements`      | A list of elements contained in the set. Elements must conform to the set `type`.                                                                 |
 
-**Example:**
-
-```yaml
----
-nftables_tables:
-[...]
-    sets:
-      - name: blacklist_ipv4
-        family: ipv4_addr
-        policy: performance
-        timeout: 24h
-        elements:
-          - 192.168.0.45
-          - 192.168.0.46
-      - name: balcklist_ipv6
-        family: ipv6_addr
-        tiemout: 36h
-[...]
-...
-```
+[Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#SETS)
 
 
-### `map` properties
-
-[DOC](https://manpages.debian.org/nftables/nftables.8.en.html#MAPS)
+### map properties
 
 | Property name     | Description                                                                                                                             |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | **`name`**        | Name of the map.                                                                                                                        |
 | **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto` or `mark`.                        |
 | **`values_type`** | Type of the values. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `mark`, `counter` or `quota`.  |
-| `elements`        | A list of elements contained in the map. Elements must conform to the map `keys_type` and `values_type`. See below.                     |
+| `elements`        | A list of [elements](#map-element-properties) contained in the map. Elements must conform to the map `keys_type` and `values_type`.     |
 
-#### `map element` properties
+[Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#MAPS)
+
+#### map element properties
 
 | Property name   | Description                    |
 | --------------- | ------------------------------ |
 | **`key`**       | Key value.                     |
 | **`value`**     | Value associated with the key. |
 
-**Example:**
 
-```yaml
----
-nftables_tables:
-[...]
-    maps:
-      - name: port2IP
-        keys_type: inet_service
-        values_type: ipv4_addr
-        elements:
-          - key: 22
-            value: 192.168.0.45
-          - key: 80
-            value: 192.168.0.55
-[...]
-...
-```
-
-
-### `verdict_map` properties
+### verdict_map properties
 
 A `verdict_map` is just a special case of `map` where the `values_type` is always `verdict`. As such, there is no `values_type` property. Also, elements contained in a `verdict_map` have a `verdict` property instead of the `value` property.
 
@@ -142,46 +73,27 @@ A `verdict_map` is just a special case of `map` where the `values_type` is alway
 | ----------------- | ---------------------------------------------------------------------------------------------------------------- |
 | **`name`**        | Name of the map.                                                                                                 |
 | **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto` or `mark`. |
-| `elements`        | A list of elements contained in the verdict map. See below                                                       |
+| `elements`        | A list of [elements](#verdict_map-element-properties) contained in the verdict map.                              |
 
-#### `verdict_map element` properties
+#### verdict_map element properties
 
 | Property name   | Description                      |
 | --------------- | -------------------------------- |
 | **`key`**       | Key value.                       |
 | **`verdict`**   | Verdict associated with the key. |
 
-Example:
 
-```yaml
----
-nftables_tables:
-[...]
-    verdict_maps:
-      - name: allowed_ports
-        keys_type: inet_service
-        elements:
-          - key: 22
-            verdict: allow
-          - key: 80
-            verdict: allow
-[...]
-...
-```
+### chain properties
 
-### `chain` properties
+| Property name | Description                                               |
+| ------------- | --------------------------------------------------------- |
+| **`name`**    | Name of the chain.                                        |
+| **`base`**    | [Base rule](#base-properties) for the chain.              |
+| `rules`       | List of [rules](#rule-properties) contained in the chain. |
 
-[DOC](https://manpages.debian.org/nftables/nftables.8.en.html#CHAINS)
+[Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#CHAINS)
 
-| Property name | Description                                      |
-| ------------- | ------------------------------------------------ |
-| **`name`**    | Name of the chain.                               |
-| **`base`**    | Base rule for the chain. See below.              |
-| `rules`       | List of rules contained in the chain. See below. |
-
-#### `base` properties
-
-[DOC](https://manpages.debian.org/nftables/nftables.8.en.html#CHAINS)
+#### base properties
 
 | Property name  | Description                                                                    |
 | -------------- | ------------------------------------------------------------------------------ |
@@ -190,7 +102,9 @@ nftables_tables:
 | **`priority`** | Integer determining the order of the chains attached to the same `hook`.       |
 | `policy`       | Default policy for the chain. If specified, must be either `accept` or `drop`. |
 
-#### `rule` properties
+[Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#CHAINS)
+
+#### rule properties
 
 [DOC](https://manpages.debian.org/nftables/nftables.8.en.html#RULES)
 
@@ -200,28 +114,81 @@ nftables_tables:
 | **`statement`** | Rule statement.                                          |
 | `comment`       | A comment describing the rule.                           |
 
-Example:
+
+## Example
+
+Here is a small example of what your file should look like.
+
+**IMPORTANT**: DO NOT use this as your firewall !
 
 ```yaml
 ---
+nftables_flush_ruleset: yes
+nftables_config_path: /etc/nftables.rules
 nftables_tables:
-[...]
+  - name: firewall
+    family: inet
+
+    sets:
+      - name: "set1"
+        type: 
+        size: 10
+        policy: "performance"
+        timeout: "1d"
+        flags:
+          - "timeout"
+          - "interval"
+        gc_interval: "12h" 
+        elements:
+          - 192.0.2.1
+          - 192.0.2.2
+
+    maps:
+      - name: "map1"
+        keys_type: "inet_service"
+        values_type: "ipv4_addr"
+        elements:
+          - key: ssh
+            value: "192.0.2.10"
+      - name: "map2"
+        keys_type: "inet_service"
+        values_type: "ipv4_addr"
+        elements:
+          - key: ftp
+            value: "192.0.2.25"
+
+    verdict_maps:
+      - name: "vmap1"
+        keys_type: "inet_service"
+        elements:
+          - key: "192.0.2.10"
+            value: "accept"
+
     chains:
-      - name: input
+      - name: "My input filter"
         base:
-          type: filter
-          hook: input
+          type: "filter"
+          hook: "input"
           priority: 0
-          policy: drop
+          policy: "drop"
         rules:
-          - position: 3
-            statement: ip protocol icmp accept
-            comment: Accept incoming ICMP.
-          - position: 1
-            statement: ct state established, related accept
           - position: 2
-            statement: ct state invalid drop
-[...]
+            statement: "ct state invalid log prefix 'Invalid_IN: ' drop"
+            comment: "Log and drop invalid packets.
+          - position: 1
+            statement: "iif lo accept"
+          - position: 3
+            statement: "ct state {established,related} accept"
+
+      - name: "My output filter"
+        base:
+          type: "filter"
+          hook: "output"
+          priority: -10
+          policy: "accept"
+        rules:
+          - position: 1
+            statement: "ip daddr 192.0.2.100 counter"
 ...
 ```
 
