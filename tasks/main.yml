@@ -3,8 +3,8 @@
   template:
     src: templates/nftables.rules.j2
     dest: "{{ nft_config_file }}"
-#    owner: root
-#    group: root
-#    mode: 0644
+    owner: root
+    group: root
+    mode: 0644
 #    validate: FIXME
 ...
