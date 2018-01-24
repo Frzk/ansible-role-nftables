@@ -1,0 +1,3 @@
+---
+nftables_config_file: "/etc/sysconfig/nftables.conf"
+...

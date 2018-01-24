@@ -1,0 +1,6 @@
+---
+- name: apt
+    name: nftables
+    state: installed
+    update_cache: yes
+...
