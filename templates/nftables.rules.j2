@@ -2,10 +2,6 @@
 #!/usr/sbin/nft -f
 {{ ansible_managed | comment }}
 
-{% if nft_flush_ruleset %}
-flush ruleset
-{% endif %}
-
 {% for table in nft_tables %}
 table {{ table.family }} {{ table.name }} {
 
