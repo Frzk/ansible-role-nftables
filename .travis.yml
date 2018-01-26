@@ -24,17 +24,17 @@ script:
   - docker run --name "${TRAVIS_COMMIT}.${distribution}-${version}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "${distribution}-${version}:ansible"
   #
   # 1/ Check role syntax:
-  # - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
+  - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
   #
   # 2/ Check first run:
-  # - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+  - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
   #
   # 3/ Check idempotence:
-  # - >
-  #   docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
-  #   | grep -q 'changed=0.*failed=0'
-  #   && (echo 'Idempotence test: pass' && exit 0)
-  #   || (echo 'Idempotence test: fail' && exit 1)
+  - >
+    docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
 
 after_script:
   # Remove container:
