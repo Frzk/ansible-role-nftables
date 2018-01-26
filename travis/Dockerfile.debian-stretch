@@ -9,7 +9,7 @@ RUN apt-get update && \
   python-pip \
   git
 
-RUN pip install ansible
+RUN pip install --upgrade setuptools && pip install wheel && pip install ansible
 
 RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
 
