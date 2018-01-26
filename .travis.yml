@@ -6,30 +6,40 @@ services:
 
 # Build matrix
 env:
-#  - BUILD_OS: centos
-#    BUILD_OS_VERSION: 7
-  - BUILD_OS: debian
-    BUILD_OS_VERSION: stretch
+#  - distribution: centos
+#    version: 7
+  - distribution: debian
+    version: stretch
+    
 
-# Build a Docker image from the Dockerfile.${BUILD_OS}_${BUILD_OS_VERSION} file
+# Build a Docker image from the Dockerfile.${distribution}-${version} file
 before_install:
-  - docker build -f Dockerfile.${BUILD_OS}_${BUILD_OS_VERSION} -t ansible_${BUILD_OS} .
+  - docker pull "${distribution}:${version}"
+  - docker build --no-cache --rm --file="travis/Dockerfile.${distribution}-${version}" --tag="${distribution}-${version}:ansible" travis
 
 # Actually do the tests
 script:
-  # 1/ Check the role syntax:
-  - printf "Checking role syntax\n"
-  - docker run --rm -it ansible_${BUILD_OS}:latest ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+  #
+  # 0/ Run the container
+  - container_id=$(mktemp)
+  - docker run --name "${container_id}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "${distribution}-${version}:ansible"
+  #
+  # 1/ Check role syntax:
+  # - docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
+  #
   # 2/ Check first run:
-  # - ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
+  # - docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+  #
   # 3/ Check idempotence:
   # - >
-  #   ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
+  #   docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
   #   | grep -q 'changed=0.*failed=0'
   #   && (echo 'Idempotence test: pass' && exit 0)
   #   || (echo 'Idempotence test: fail' && exit 1)
-  # 4/ Check resulting file
-  # FIXME
+
+after_script:
+  # Remove container:
+  - docker rm -f "${container_id}"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

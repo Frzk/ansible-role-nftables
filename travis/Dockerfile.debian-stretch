@@ -1,0 +1,16 @@
+# Build Debian Stretch image.
+
+FROM debian:stretch
+
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
+  build-essential \
+  systemd \
+  ansible \
+  python-dev \
+  python-pip \
+  git
+
+RUN mkdir -p /etc/ansible && echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+
+ENTRYPOINT ["/bin/systemd"]
