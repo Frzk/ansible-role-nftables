@@ -2,7 +2,7 @@
 #!/usr/sbin/nft -f
 {{ ansible_managed | comment }}
 
-{% for table in nft_tables %}
+{% for table in nftables_tables %}
 table {{ table.family }} {{ table.name }} {
 
 {%- if table.sets is defined %}
