@@ -1,28 +1,33 @@
 ---
-dist: trusty
 sudo: required
+language: bash
+services:
+  - docker
 
-language: python
-python: "2.7"
+# Build matrix
+env:
+#  - BUILD_OS: centos
+#    BUILD_OS_VERSION: 7
+  - BUILD_OS: debian
+    BUILD_OS_VERSION: stretch
 
+# Build a Docker image from the Dockerfile.${BUILD_OS}_${BUILD_OS_VERSION} file
 before_install:
-  - sudo apt-get update -qq
+  - docker build -f Dockerfile.${BUILD_OS}_${BUILD_OS_VERSION} -t ansible_${BUILD_OS} .
 
-install:
-  - pip install ansible
-  - printf '[defaults]\nroles_path = ../' > ansible.cfg
-
+# Actually do the tests
 script:
   # 1/ Check the role syntax:
-  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+  - printf "Checking role syntax\n"
+  - docker run --rm -it ansible_${BUILD_OS}:latest ansible-playbook -i tests/inventory tests/test.yml --syntax-check
   # 2/ Check first run:
-  - ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
+  # - ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
   # 3/ Check idempotence:
-  - >
-    ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+  # - >
+  #   ansible-playbook -i tests/inventory tests/test.yml --connection=local --become
+  #   | grep -q 'changed=0.*failed=0'
+  #   && (echo 'Idempotence test: pass' && exit 0)
+  #   || (echo 'Idempotence test: fail' && exit 1)
   # 4/ Check resulting file
   # FIXME
 
