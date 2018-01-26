@@ -21,25 +21,24 @@ before_install:
 script:
   #
   # 0/ Run the container
-  - container_id=$(mktemp)
-  - docker run --name "${container_id}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "${distribution}-${version}:ansible"
+  - docker run --name "${TRAVIS_COMMIT}.${distribution}-${version}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "${distribution}-${version}:ansible"
   #
   # 1/ Check role syntax:
-  # - docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
+  # - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
   #
   # 2/ Check first run:
-  # - docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+  # - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
   #
   # 3/ Check idempotence:
   # - >
-  #   docker exec "${container_id}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+  #   docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
   #   | grep -q 'changed=0.*failed=0'
   #   && (echo 'Idempotence test: pass' && exit 0)
   #   || (echo 'Idempotence test: fail' && exit 1)
 
 after_script:
   # Remove container:
-  - docker rm -f "${container_id}"
+  - docker rm -f "${TRAVIS_COMMIT}.${distribution}-${version}"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
