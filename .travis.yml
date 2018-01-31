@@ -6,22 +6,29 @@ services:
 
 # Build matrix
 env:
-#  - distribution: centos
-#    version: 7
+#   - distribution: centos
+#     version: 7
   - distribution: debian
-    version: stretch
-    
+    version: 9
+#   - distribution: debian
+#     version: jessie
+#   - distribution: ubuntu
+#     version: 16.04
+#   - distribution: ubuntu
+#     version: 17.10
+#   - distribution: ubuntu
+#     version: 18.04
 
 # Build a Docker image from the Dockerfile.${distribution}-${version} file
 before_install:
-  - docker pull "${distribution}:${version}"
-  - docker build --no-cache --rm --file="travis/Dockerfile.${distribution}-${version}" --tag="${distribution}-${version}:ansible" travis
+  - docker pull "kblr/${distribution}${version}-ansible:latest"
+#  - docker build --no-cache --rm --file="travis/Dockerfile.${distribution}-${version}" --tag="${distribution}-${version}:ansible" travis
 
 # Actually do the tests
 script:
   #
   # 0/ Run the container
-  - docker run --name "${TRAVIS_COMMIT}.${distribution}-${version}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "${distribution}-${version}:ansible"
+  - docker run --name "${TRAVIS_COMMIT}.${distribution}-${version}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "kblr/${distribution}${version}-ansible:latest"
   #
   # 1/ Check role syntax:
   - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
