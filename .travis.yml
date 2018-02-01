@@ -31,7 +31,6 @@ script:
     --detach
     --privileged
     --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
-    # --volume="${PWD}":/etc/ansible/roles/under_test:rw "kblr/${distribution}${version}-ansible:latest"
     --mount type=bind,source="$(pwd)",target=/etc/ansible/roles/under_test,readonly
     "kblr/${distribution}${version}-ansible:latest"
 
