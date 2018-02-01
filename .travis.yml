@@ -19,26 +19,36 @@ env:
 #   - distribution: ubuntu
 #     version: 18.04
 
-# Build a Docker image from the Dockerfile.${distribution}-${version} file
 before_install:
+  # Pull the image corresponding to the environment vars from Docker Hub:
   - docker pull "kblr/${distribution}${version}-ansible:latest"
-#  - docker build --no-cache --rm --file="travis/Dockerfile.${distribution}-${version}" --tag="${distribution}-${version}:ansible" travis
 
-# Actually do the tests
 script:
-  #
-  # 0/ Run the container
-  - docker run --name "${TRAVIS_COMMIT}.${distribution}-${version}" --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro --volume="${PWD}":/etc/ansible/roles/under_test:rw "kblr/${distribution}${version}-ansible:latest"
-  #
+  # 0/ Run the container:
+  - > 
+    docker run
+    --name "${TRAVIS_COMMIT}.${distribution}-${version}"
+    --detach
+    --privileged
+    --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
+    # --volume="${PWD}":/etc/ansible/roles/under_test:rw "kblr/${distribution}${version}-ansible:latest"
+    --mount type=bind,source="$(pwd)",target=/etc/ansible/roles/under_test,readonly
+    "kblr/${distribution}${version}-ansible:latest"
+
   # 1/ Check role syntax:
-  - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
-  #
+  - >
+    docker exec "${TRAVIS_COMMIT}.${distribution}-${version}"
+    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --syntax-check
+
   # 2/ Check first run:
-  - docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
-  #
+  - >
+    docker exec "${TRAVIS_COMMIT}.${distribution}-${version}"
+    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+
   # 3/ Check idempotence:
   - >
-    docker exec "${TRAVIS_COMMIT}.${distribution}-${version}" env ANSIBLE_FORCE_COLOR=1 ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+    docker exec "${TRAVIS_COMMIT}.${distribution}-${version}"
+    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
