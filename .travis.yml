@@ -42,12 +42,12 @@ script:
   # 2/ Check first run:
   - >
     docker exec "${TRAVIS_COMMIT}.${distribution}-${version}"
-    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml
 
   # 3/ Check idempotence:
   - >
     docker exec "${TRAVIS_COMMIT}.${distribution}-${version}"
-    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml --connection=local --become
+    ansible-playbook -v /etc/ansible/roles/under_test/tests/test.yml
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
