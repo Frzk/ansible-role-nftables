@@ -30,7 +30,7 @@ script:
     --name "${TRAVIS_COMMIT}.${distribution}-${version}"
     --detach
     --privileged
-    --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
+    --mount type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup,readonly
     --mount type=bind,source="$(pwd)",target=/etc/ansible/roles/under_test,readonly
     "kblr/${distribution}${version}-ansible:latest"
 
