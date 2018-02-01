@@ -6,8 +6,8 @@ services:
 
 # Build matrix
 env:
-#   - distribution: centos
-#     version: 7
+  - distribution: centos
+    version: 7
   - distribution: debian
     version: 9
 #   - distribution: debian
