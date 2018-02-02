@@ -12,8 +12,8 @@ env:
     version: 9
 #   - distribution: debian
 #     version: jessie
-#   - distribution: ubuntu
-#     version: 16.04
+  - distribution: ubuntu
+    version: 16.04
 #   - distribution: ubuntu
 #     version: 17.10
 #   - distribution: ubuntu
