@@ -10,14 +10,8 @@ env:
     version: 7
   - distribution: debian
     version: 9
-#   - distribution: debian
-#     version: jessie
-#  - distribution: ubuntu
-#    version: 16.04
-#   - distribution: ubuntu
-#     version: 17.10
-#   - distribution: ubuntu
-#     version: 18.04
+  - distribution: ubuntu
+    version: 18.04
 
 before_install:
   # Pull the image corresponding to the environment vars from Docker Hub:
