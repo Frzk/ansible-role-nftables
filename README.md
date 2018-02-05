@@ -107,7 +107,7 @@ A `verdict_map` is just a special case of `map` where the `values_type` is alway
 
 #### rule properties
 
-[DOC](https://manpages.debian.org/nftables/nftables.8.en.html#RULES)
+[Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#RULES)
 
 | Property name   | Description                                              |
 | --------------- | -------------------------------------------------------- |
@@ -194,6 +194,19 @@ nftables_tables:
 ```
 
 
+## Testing
+
+Testing involves the following steps:
+  1. Check the role syntax
+  2. Do a first run
+  3. Do a second run and check for idempotence.
+
+On the following OS:
+  - Debian 9
+  - CentOS 7
+  - Ubuntu 18.04
+
+
 ## Contributing
 
-
+Code reviews, patches, comments, bug reports and feature requests are welcome. Please read the [Contributing Guide](CONTRIBUTING.md) for further details.
