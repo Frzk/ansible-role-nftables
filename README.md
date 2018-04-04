@@ -33,28 +33,28 @@ Variables and *properties* in bold are mandatory. Others are optional.
 
 ### set properties
 
-| Property name   | Description                                                                                                                                       |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`name`**      | Name of the set.                                                                                                                                  |
-| **`type`**      | Address type of the elements contained in the set. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto` or `mark`. |
-| `size`          | Number of elements the set can contain.                                                                                                           |
-| `policy`        | The set selection policy. If specified, must be either `performance` or `memory`.                                                                 |
-| `timeout`       | How long the elements stay in the set.                                                                                                            |
-| `flags`         | A list of flags. If specified, must contain at least one of the following : `constant`, `interval`, `timeout`.                                    |
-| `gc_interval`   | Garbage collection interval.                                                                                                                      |
-| `elements`      | A list of elements contained in the set. Elements must conform to the set `type`.                                                                 |
+| Property name   | Description                                                                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`name`**      | Name of the set.                                                                                                                                                      |
+| **`type`**      | Type of the elements contained in the set. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `icmp_type`, `icmpv6_type` or `mark`. |
+| `size`          | Number of elements the set can contain.                                                                                                                               |
+| `policy`        | The set selection policy. If specified, must be either `performance` or `memory`.                                                                                     |
+| `timeout`       | How long the elements stay in the set.                                                                                                                                |
+| `flags`         | A list of flags. If specified, must contain at least one of the following : `constant`, `interval`, `timeout`.                                                        |
+| `gc_interval`   | Garbage collection interval.                                                                                                                                          |
+| `elements`      | A list of elements contained in the set. Elements must conform to the set `type`.                                                                                     |
 
 [Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#SETS)
 
 
 ### map properties
 
-| Property name     | Description                                                                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **`name`**        | Name of the map.                                                                                                                        |
-| **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto` or `mark`.                        |
-| **`values_type`** | Type of the values. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `mark`, `counter` or `quota`.  |
-| `elements`        | A list of [elements](#map-element-properties) contained in the map. Elements must conform to the map `keys_type` and `values_type`.     |
+| Property name     | Description                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`name`**        | Name of the map.                                                                                                                             |
+| **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `icmp_type`, `icmpv6_type` or `mark`. |
+| **`values_type`** | Type of the values. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `mark`, `counter` or `quota`.       |
+| `elements`        | A list of [elements](#map-element-properties) contained in the map. Elements must conform to the map `keys_type` and `values_type`.          |
 
 [Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#MAPS)
 
@@ -70,11 +70,11 @@ Variables and *properties* in bold are mandatory. Others are optional.
 
 A `verdict_map` is just a special case of `map` where the `values_type` is always `verdict`. As such, there is no `values_type` property. Also, elements contained in a `verdict_map` have a `verdict` property instead of the `value` property.
 
-| Property name     | Description                                                                                                      |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **`name`**        | Name of the map.                                                                                                 |
-| **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto` or `mark`. |
-| `elements`        | A list of [elements](#verdict_map-element-properties) contained in the verdict map.                              |
+| Property name     | Description                                                                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`name`**        | Name of the map.                                                                                                                             |
+| **`keys_type`**   | Type of the keys. Must be either `ipv4_addr`, `ipv6_addr`, `ether_addr`, `inet_service`, `inet_proto`, `icmp_type`, `icmpv6_type` or `mark`. |
+| `elements`        | A list of [elements](#verdict_map-element-properties) contained in the verdict map.                                                          |
 
 #### verdict_map element properties
 
@@ -175,7 +175,7 @@ nftables_tables:
         rules:
           - position: 2
             statement: "ct state invalid log prefix 'Invalid_IN: ' drop"
-            comment: "Log and drop invalid packets.
+            comment: "Log and drop invalid packets."
           - position: 1
             statement: "iif lo accept"
           - position: 3
