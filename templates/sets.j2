@@ -19,11 +19,11 @@
         policy {{ set.policy }}
         {% endif %}
 
-        {%- if set.flags is defined %}
+        {%- if set.flags is defined and set.flags %}
         flags {{ set.flags | join(', ') }}
         {% endif %}
 
-        {%- if set.elements is defined %}
+        {%- if set.elements is defined and set.elements %}
         elements = { {{ set.elements | join(', ') }} }
         {% endif %}
     }
