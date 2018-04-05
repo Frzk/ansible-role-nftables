@@ -89,7 +89,7 @@ A `verdict_map` is just a special case of `map` where the `values_type` is alway
 | Property name | Description                                               |
 | ------------- | --------------------------------------------------------- |
 | **`name`**    | Name of the chain.                                        |
-| **`base`**    | [Base rule](#base-properties) for the chain.              |
+| `base`        | [Base rule](#base-properties) for the chain.              |
 | `rules`       | List of [rules](#rule-properties) contained in the chain. |
 
 [Documentation](https://manpages.debian.org/nftables/nftables.8.en.html#CHAINS)
