@@ -20,7 +20,7 @@
     owner: root
     group: root
     mode: 0644
-#    validate: FIXME
+    validate: "nft -c -f %s"
   notify: Reload nftables
 
 - name: Disable conflicting services
@@ -29,7 +29,7 @@
     state: stopped
     enabled: no
   register: disable_service_result
-  failed_when: disable_service_result | failed and ('Could not find the requested service' not in disable_service_result.msg)
+  failed_when: disable_service_result is failed and ('Could not find the requested service' not in disable_service_result.msg)
   with_items:
     - iptables
 
