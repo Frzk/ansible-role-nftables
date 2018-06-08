@@ -1,5 +1,5 @@
 ---
-nft_flush_ruleset: yes
-nft_config_file: "/etc/sysconfig/nftables.conf"
-nft_tables: []
+nftables_flush_ruleset: yes
+nftables_config_file: "/etc/nftables.conf"
+nftables_tables: []
 ...
