@@ -13,6 +13,7 @@ Variables and *properties* in bold are mandatory. Others are optional.
 
 | Variable name            | Description                                        | Default value        |
 | ------------------------ | -------------------------------------------------- | -------------------- |
+| `nftables_flush_ruleset` | Wether we should flush the current ruleset or not. | `yes`                |
 | `nftables_config_file`   | Path to the configuration file.                    | `/etc/nftables.conf` |
 | `nftables_tables`        | A list of [table](#table-properties).              | `[]`                 |
 
