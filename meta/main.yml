@@ -2,10 +2,10 @@
 galaxy_info:
   author: François KUBLER
   description: Install and manage nftables.
-  company: /kblr
+  company: kblr
   license: Apache-2.0
   issue_tracker_url: https://github.com/Frzk/ansible-role-nftables/issues 
-  min_ansible_version : 2.4.2.0
+  min_ansible_version: 2.4.2.0
   platforms:
     - name: Archlinux
       versions:
@@ -15,7 +15,8 @@ galaxy_info:
         - 7
     - name: Debian
       versions:
-        - 9
+        - buster
+        - sid
     - name: Ubuntu
       versions:
         - bionic

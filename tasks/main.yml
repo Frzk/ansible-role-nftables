@@ -30,7 +30,8 @@
     state: stopped
     enabled: no
   register: disable_service_result
-  failed_when: disable_service_result is failed and ('Could not find the requested service' not in disable_service_result.msg)
+  failed_when: (disable_service_result is failed)
+               and ('Could not find the requested service' not in disable_service_result.msg)
   with_items:
     - iptables
 
