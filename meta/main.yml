@@ -4,7 +4,7 @@ galaxy_info:
   description: Install and manage nftables.
   company: kblr
   license: Apache-2.0
-  issue_tracker_url: https://github.com/Frzk/ansible-role-nftables/issues 
+  issue_tracker_url: https://github.com/Frzk/ansible-role-nftables/issues
   min_ansible_version: 2.4.2.0
   platforms:
     - name: Archlinux
