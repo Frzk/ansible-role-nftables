@@ -1,6 +1,6 @@
 ---
 - yum:
     name: nftables
-    state: installed
+    state: present
     update_cache: yes
 ... 
