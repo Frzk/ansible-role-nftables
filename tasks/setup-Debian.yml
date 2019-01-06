@@ -2,5 +2,4 @@
 - apt:
     name: nftables
     state: present
-    update_cache: yes
 ...
