@@ -1,5 +1,0 @@
----
-- yum:
-    name: nftables
-    state: present
-... 

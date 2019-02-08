@@ -1,5 +1,0 @@
----
-- apt:
-    name: nftables
-    state: present
-...

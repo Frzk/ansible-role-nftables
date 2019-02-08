@@ -11,9 +11,13 @@
       skip: yes
 
 - name: Install
-  include_tasks: "setup-{{ ansible_os_family }}.yml"
+  become: yes
+  package:
+    name: nftables
+    state: present
 
 - name: Set up configuration file
+  become: yes
   template:
     src: templates/nftables.rules.j2
     dest: "{{ nftables_config_file }}"
@@ -25,6 +29,7 @@
   notify: Reload nftables
 
 - name: Disable conflicting services
+  become: yes
   service:
     name: "{{ item }}"
     state: stopped
@@ -36,11 +41,13 @@
     - iptables
 
 - name: Start service
+  become: yes
   service:
     name: nftables
     state: started
 
 - name: Enable service
+  become: yes
   service:
     name: nftables
     enabled: yes
