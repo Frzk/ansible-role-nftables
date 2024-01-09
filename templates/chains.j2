@@ -9,7 +9,6 @@
 
         {% if chain.rules is defined -%}
         {% for rule in chain.rules|sort(attribute="position") %}
-
         {% if rule.comment is defined %}
         # {{ rule.comment }}
         {% endif %}
